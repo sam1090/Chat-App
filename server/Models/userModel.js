@@ -25,7 +25,8 @@ var userSchema = new mongoose.Schema({
         type:String,
         required:true,
         minlength :3,
-        maxlength: 1024
+        maxlength: 1024,
+        select: false,
     },
 },{
   timestamps: true

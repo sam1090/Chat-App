@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const User = require('../Models/userModel');
 // const sendEmail = require('../utils/email');
 const validator = require('validator');
+const asyncHandler= require('async-handler-express');
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -49,8 +50,6 @@ exports.signup = async (req, res, next) => {
   if(!validator.isEmail(req.body.email))
   return res.status(400).json("Email must be a valid email");
 
-  // if(!validator.isStrongPassword(req.body.password))
-  // return res.status(400).json("Password must be a strong password");
 
   const newUser = await User.create({
     name: req.body.name,
@@ -65,24 +64,26 @@ exports.signup = async (req, res, next) => {
 }
 };
 
-// exports.login = catchAsync(async (req, res, next) => {
-//   const { email, password } = req.body;
+//handle the crash error when any error occurs
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
 
-//   //check if the entries are field
+  //check if the entries are field
 
-//   if (!email || !password) {
-//     return next(new AppError('please provide email and password', 400));
-//   }
-//   // check if user exists and password is correct
-//   const user = await User.findOne({ email }).select('+password');
+  if (!email || !password) {
+    res.status(401).json({error:'You are not logged in ! Login to get access '});
+  }
+  // check if user exists and password is correct
+  const user = await User.findOne({ email }).select('+password');
 
-//   if (!user || !(await user.correctPassword(password, user.password))) {
-//     return next(new AppError('Incorrect email id or password ', 401));
-//   }
-//   // if everything is ok , send token to client
-//   createSendToken(user, 200, res);
-// });
-
+  if (!user || !(await user.correctPassword(password, user.password))) {
+    res.status(401).json({error:'Incorrect email id or password '});
+  }
+  // if everything is ok , send token to client
+  createSendToken(user, 200, res);
+}
+;
+ 
 // exports.protect = catchAsync(async (req, res, next) => {
 //   //getting token and checking if its there
 //   let token;
