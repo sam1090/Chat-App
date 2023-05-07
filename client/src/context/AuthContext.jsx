@@ -24,7 +24,7 @@ export const AuthContextProvider = ({ children }) => {
     password: '',
   });
 
-  console.log('registerInfo', setRegisterInfo);
+  console.log('registerInfo', registerInfo);
 
   const updateRegisterInfo = useCallback((info) => {
     setRegisterInfo(info);
