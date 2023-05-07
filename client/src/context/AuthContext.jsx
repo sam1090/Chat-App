@@ -1,0 +1,38 @@
+// AuthContext.jsx
+import React, { createContext, useCallback, useState } from 'react';
+
+export const AuthContext = createContext({
+  user: null,
+  registerInfo: {
+    name: '',
+    email: '',
+    password: '',
+  },
+  setRegisterInfo: {
+    name: '',
+    email: '',
+    password: '',
+  },
+  updateRegisterInfo: () => {},
+});
+
+export const AuthContextProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [registerInfo, setRegisterInfo] = useState({
+    name: '',
+    email: '',
+    password: '',
+  });
+
+  console.log('registerInfo', setRegisterInfo);
+
+  const updateRegisterInfo = useCallback((info) => {
+    setRegisterInfo(info);
+  },[]);
+
+  return (
+    <AuthContext.Provider value={{ user, registerInfo, updateRegisterInfo }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
