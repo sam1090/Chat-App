@@ -71,15 +71,13 @@ exports.login = async (req, res) => {
   //check if the entries are field
 
   if (!email || !password) {
-    res
-      .status(401)
-      .json({ error: 'You are not logged in ! Login to get access ' });
+    res.status(401).json('You are not logged in ! Login to get access ');
   }
   // check if user exists and password is correct
   const user = await User.findOne({ email }).select('+password');
 
   if (!user || !(await user.correctPassword(password, user.password))) {
-    res.status(401).json({ error: 'Incorrect email id or password ' });
+    res.status(401).json('Incorrect email id or password ');
   }
   // if everything is ok , send token to client
   createSendToken(user, 200, res);

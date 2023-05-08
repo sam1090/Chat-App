@@ -28,7 +28,7 @@ const Register = () => {
                 }
               />
               <Form.Control
-                type='text'
+                type='email'
                 placeholder='Email'
                 onChange={(e) =>
                   updateRegisterInfo({ ...registerInfo, email: e.target.value })
