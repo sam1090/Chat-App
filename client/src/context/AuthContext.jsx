@@ -1,5 +1,7 @@
 // AuthContext.jsx
-import React, { createContext, useCallback, useState } from 'react';
+import { createContext, useCallback, useState } from 'react';
+import { postrequest } from '../utils/services,js';
+import { baseUrl } from '../utils/services,js';
 
 export const AuthContext = createContext({
   user: null,
@@ -18,6 +20,8 @@ export const AuthContext = createContext({
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [registerError, setRegisterError] = useState(null);
+  const [isRegisterLoading, setIsRegisterLoading] = useState(false);
   const [registerInfo, setRegisterInfo] = useState({
     name: '',
     email: '',
@@ -28,10 +32,38 @@ export const AuthContextProvider = ({ children }) => {
 
   const updateRegisterInfo = useCallback((info) => {
     setRegisterInfo(info);
-  },[]);
+  }, []);
+
+  const registerUser = useCallback(async (e) => {
+    e.preventDefault();
+    setIsRegisterLoading(true);
+    setRegisterError(null);
+    const response = await postrequest(
+      `${baseUrl}/users/signup`,
+      JSON.stringify(registerInfo),
+    );
+
+    setIsRegisterLoading(false);
+    console.log(response);
+
+    if (response.error) {
+      return setRegisterError(response);
+    }
+    localStorage.setItem('User', JSON.stringify(response));
+    setUser(response);
+  }, [registerInfo]);
 
   return (
-    <AuthContext.Provider value={{ user, registerInfo, updateRegisterInfo }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        registerInfo,
+        updateRegisterInfo,
+        registerError,
+        registerUser,
+        isRegisterLoading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

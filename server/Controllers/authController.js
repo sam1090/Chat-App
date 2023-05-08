@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const User = require('../Models/userModel');
 // const sendEmail = require('../utils/email');
 const validator = require('validator');
-const asyncHandler= require('async-handler-express');
+const asyncHandler = require('async-handler-express');
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -16,7 +16,7 @@ const createSendToken = (user, statusCode, res) => {
 
   const cookieOptions = {
     expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
     ),
 
     httpOnly: true,
@@ -37,31 +37,31 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = async (req, res, next) => {
-  try{
-  let user = await User.findOne({email: req.body.email});
+  try {
+    let user = await User.findOne({ email: req.body.email });
 
-  if(user)
-  return res.status(400).json("User with the given email already exists");
+    if (user)
+      return res
+        .status(400)
+        .json({ message: 'User with the given email already exists' });
 
-  if(!req.body.name || !req.body.email || !req.body.password ){
-    throw new Error(" All fields are required");
+    if (!req.body.name || !req.body.email || !req.body.password) {
+      return res.status(400).json({ message: ' All fields are required' });
+    }
+
+    if (!validator.isEmail(req.body.email))
+      return res.status(400).json({ message: 'Email must be a valid email' });
+
+    const newUser = await User.create({
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password,
+    });
+
+    createSendToken(newUser, 201, res);
+  } catch (error) {
+    throw new Error(error);
   }
-
-  if(!validator.isEmail(req.body.email))
-  return res.status(400).json("Email must be a valid email");
-
-
-  const newUser = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
-    
-  });
-
-  createSendToken(newUser, 201, res);
-}catch(error){
-  throw new Error(error);
-}
 };
 
 //handle the crash error when any error occurs
@@ -71,19 +71,20 @@ exports.login = async (req, res) => {
   //check if the entries are field
 
   if (!email || !password) {
-    res.status(401).json({error:'You are not logged in ! Login to get access '});
+    res
+      .status(401)
+      .json({ error: 'You are not logged in ! Login to get access ' });
   }
   // check if user exists and password is correct
   const user = await User.findOne({ email }).select('+password');
 
   if (!user || !(await user.correctPassword(password, user.password))) {
-    res.status(401).json({error:'Incorrect email id or password '});
+    res.status(401).json({ error: 'Incorrect email id or password ' });
   }
   // if everything is ok , send token to client
   createSendToken(user, 200, res);
-}
-;
- 
+};
+
 // exports.protect = catchAsync(async (req, res, next) => {
 //   //getting token and checking if its there
 //   let token;
