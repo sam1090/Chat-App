@@ -1,5 +1,5 @@
 // AuthContext.jsx
-import { createContext, useCallback, useState } from 'react';
+import { createContext, useCallback, useEffect, useState } from 'react';
 import { postrequest } from '../utils/services,js';
 import { baseUrl } from '../utils/services,js';
 
@@ -28,30 +28,36 @@ export const AuthContextProvider = ({ children }) => {
     password: '',
   });
 
-  console.log('registerInfo', registerInfo);
+  console.log('User', user);
 
+  useEffect(() => {
+    const user = localStorage.getItem('User');
+    setUser(JSON.parse(user));
+  }, []);
   const updateRegisterInfo = useCallback((info) => {
     setRegisterInfo(info);
   }, []);
 
-  const registerUser = useCallback(async (e) => {
-    e.preventDefault();
-    setIsRegisterLoading(true);
-    setRegisterError(null);
-    const response = await postrequest(
-      `${baseUrl}/users/signup`,
-      JSON.stringify(registerInfo),
-    );
+  const registerUser = useCallback(
+    async (e) => {
+      e.preventDefault();
+      setIsRegisterLoading(true);
+      setRegisterError(null);
+      const response = await postrequest(
+        `${baseUrl}/users/signup`,
+        JSON.stringify(registerInfo),
+      );
 
-    setIsRegisterLoading(false);
-    console.log(response);
+      setIsRegisterLoading(false);
 
-    if (response.error) {
-      return setRegisterError(response);
-    }
-    localStorage.setItem('User', JSON.stringify(response));
-    setUser(response);
-  }, [registerInfo]);
+      if (response.error) {
+        return setRegisterError(response);
+      }
+      localStorage.setItem('User', JSON.stringify(response));
+      setUser(response);
+    },
+    [registerInfo],
+  );
 
   return (
     <AuthContext.Provider

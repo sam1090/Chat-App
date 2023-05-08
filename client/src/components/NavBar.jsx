@@ -1,29 +1,33 @@
-import {Container , Nav , Navbar , Stack} from "react-bootstrap";
-import {Link} from "react-router-dom";
+import { Container, Nav, Navbar, Stack } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { AuthContext } from "../context/AuthContext"
+import { useContext } from "react"
 
 const NavBar = () => {
-  return ( <Navbar bg="dark" className="mb-4" style ={{height:"3.75rem"}}>
-    <Container>
-      <h2>
-        <Link to="/" className="link-light text-decoration-none">
-        ChattApp
-        </Link>
+  const { user } = useContext(AuthContext);
+
+  return (
+    <Navbar bg='dark' className='mb-4' style={{ height: '3.75rem' }}>
+      <Container>
+        <h2>
+          <Link to='/' className='link-light text-decoration-none'>
+            ChattApp
+          </Link>
         </h2>
-        <span className="text-warning"> Logged in as Sam </span>
+        <span className='text-warning'> Logged in as {user?.data?.user?.name} </span>
         <Nav>
-          <Stack direction="horizontal" gap={3}>
-          <Link to="/login" className="link-light text-decoration-none">
-        Login
-        </Link>
-        <Link to="/register" className="link-light text-decoration-none">
-        Register
-        </Link>
+          <Stack direction='horizontal' gap={3}>
+            <Link to='/login' className='link-light text-decoration-none'>
+              Login
+            </Link>
+            <Link to='/register' className='link-light text-decoration-none'>
+              Register
+            </Link>
           </Stack>
         </Nav>
       </Container>
-      </Navbar> 
-      
-);
-}
- 
+    </Navbar>
+  );
+};
+
 export default NavBar;
