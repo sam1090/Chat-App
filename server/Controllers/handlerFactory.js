@@ -64,12 +64,9 @@
 //     throw new Error(error);
 //   }});
 
-
 // exports.getAll = (Model) =>
 //   (async (req, res, next) => {
 //     try{
-
-      
 
 //     // SEND RESPONSE
 //     res.status(200).json({
