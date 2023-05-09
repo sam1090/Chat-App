@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const userRouter = require('./Routes/userRoutes');
+const chatRouter = require('./Routes/chatRoutes');
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/api/users', userRouter);
+app.use('/api/chats', chatRouter);
 
 const port = 5000 || process.env.PORT;
 
