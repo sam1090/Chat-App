@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const userRouter = require('./Routes/userRoutes');
 const chatRouter = require('./Routes/chatRoutes');
+const messageRouter = require('./Routes/messageRoutes');
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(cors());
 
 app.use('/api/users', userRouter);
 app.use('/api/chats', chatRouter);
+app.use('/api/messages', messageRouter);
 
 const port = 5000 || process.env.PORT;
 
