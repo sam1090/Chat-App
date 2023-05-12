@@ -29,17 +29,16 @@ exports.createChat = async (req, res) => {
 };
 
 
-//error in this code
 //getUserChat
 exports.findUserChat = async (req, res) => {
   const userId = req.params.userId;
   try {
-    console.log(userId);
-    JSON.stringify(userId);
     const chats = await chatModel.find({
-      members: { $all: {firstId:userId} },
+      $or: [
+        { 'members.firstId': userId },
+        { 'members.secondId': userId }
+      ]
     });
-    console.log(chats);
     res.status(200).json(chats);
   } catch (error) {
     console.log(error);
