@@ -1,7 +1,7 @@
 // AuthContext.jsx
 import { createContext, useCallback, useEffect, useState } from 'react';
-import { postrequest } from '../utils/services,js';
-import { baseUrl } from '../utils/services,js';
+import { postrequest } from '../utils/services.js';
+import { baseUrl } from '../utils/services.js';
 
 export const AuthContext = createContext({
   user: null,
@@ -25,7 +25,6 @@ export const AuthContext = createContext({
     password: '',
   },
   updateLoginInfo: () => {},
-
 });
 
 // eslint-disable-next-line react/prop-types
@@ -44,9 +43,8 @@ export const AuthContextProvider = ({ children }) => {
   const [isLoginLoading, setIsLoginLoading] = useState(false);
   const [loginInfo, setLoginInfo] = useState({
     email: '',
-    password: '', 
+    password: '',
   });
-
 
   console.log('User', user);
   console.log('login', loginInfo);
@@ -56,12 +54,10 @@ export const AuthContextProvider = ({ children }) => {
     setUser(JSON.parse(user));
   }, []);
 
-
   const updateRegisterInfo = useCallback((info) => {
     setRegisterInfo(info);
   }, []);
 
-  
   const updateLoginInfo = useCallback((info) => {
     setLoginInfo(info);
   }, []);
@@ -87,7 +83,6 @@ export const AuthContextProvider = ({ children }) => {
     [registerInfo],
   );
 
-  
   const loginUser = useCallback(
     async (e) => {
       e.preventDefault();
@@ -131,7 +126,7 @@ export const AuthContextProvider = ({ children }) => {
         loginUser,
         isLoginLoading,
         logoutUser,
-      }} 
+      }}
     >
       {children}
     </AuthContext.Provider>
