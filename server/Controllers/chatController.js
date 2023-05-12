@@ -6,7 +6,7 @@ exports.createChat = async (req, res) => {
 
   try {
     const chat = await chatModel.findOne({
-      members: { $all: { firstId, secondId } },
+      members: { $all: [ firstId, secondId ] },
     });
     // const chat = await chatModel.find();
     console.log(chat);
@@ -15,7 +15,7 @@ exports.createChat = async (req, res) => {
       res.status(200).json(chat);
     } else {
       const newChat = new chatModel({
-        members: { firstId, secondId },
+        members: [firstId, secondId],
       });
 
       const response = await newChat.save();
@@ -28,31 +28,28 @@ exports.createChat = async (req, res) => {
   }
 };
 
-
 //getUserChat
 exports.findUserChat = async (req, res) => {
   const userId = req.params.userId;
   try {
+    console.log(userId);
     const chats = await chatModel.find({
-      $or: [
-        { 'members.firstId': userId },
-        { 'members.secondId': userId }
-      ]
+      members: { $in: [userId] },
     });
+    console.log(chats);
     res.status(200).json(chats);
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
   }
 };
-
 //findChat
 exports.findChat = async (req, res) => {
   const { firstId, secondId } = req.params;
 
   try {
     const chat = await chatModel.findOne({
-      members: { $all: { firstId, secondId } },
+      members: { $all: [firstId, secondId ] },
     });
 
     res.status(200).json(chat);
