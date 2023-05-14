@@ -12,7 +12,6 @@ export const useFetchRecipientUser = (chat, user) => {
       if (!recipientId) return null;
 
       const response = await getRequest(`${baseUrl}/users/getUser/${recipientId}`);
-
       if (response.error) {
         setError(response.error);
       } else {
