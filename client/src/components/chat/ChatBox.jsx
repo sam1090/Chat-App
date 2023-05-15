@@ -20,11 +20,15 @@ const ChatBox = () => {
 
   const [textMessage, setTextMessage] = useState('');
 
-  console.log(`${
-    messages?.senderId === user?.data?.user?._id
-      ? 'message self align-self-end flex-grow-0'
-      : 'message align-self-start flex-grow-0'
-  }`);
+  messages?.map((message, index) => {
+    console.log(index,`${
+      message?.senderId === user?.data?.user?._id
+        ? 'message self align-self-end flex-grow-0'
+        : 'message align-self-start flex-grow-0'
+    }`);
+    return (message)});
+
+  console.log();';'
 
   if (!recipientUser) {
     return (
