@@ -1,5 +1,6 @@
 import { createContext, useCallback, useEffect, useState } from 'react';
 import { baseUrl, getRequest, postrequest } from '../utils/services.js';
+import { io } from 'socket.io-client';
 
 export const ChatContext = createContext();
 
@@ -14,6 +15,29 @@ export const ChatContextProvider = ({ children, user }) => {
   const [messagesError, setMessagesError] = useState(null);
   const [sendTextMessageError, setSendTextMessageError] = useState(null);
   const [newMessage, setNewMessage] = useState(null);
+  const [socket, setSocket] = useState(null);
+const [onlineUsers , setOnlineUsers] = useState([]);
+  //initial socket
+
+  console.log("onlineUsers", onlineUsers);
+
+  useEffect(() => {
+    const newSocket = io('http://localhost:3000');
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [user]);
+
+  useEffect(() => {
+    if (socket === null) return;
+    socket.emit('addNewUser', user?.data?.user?._id);
+
+    socket.on("getOnlineUsers", (res)=>{
+      setOnlineUsers(res);
+    })
+  }, [socket]);
 
   useEffect(() => {
     const getUsers = async () => {
@@ -105,7 +129,7 @@ export const ChatContextProvider = ({ children, user }) => {
 
   const sendTextMessage = useCallback(
     async (textMessage, sender, currentChatId, setTextMessage) => {
-      console.log("sender",sender);
+      console.log('sender', sender);
       if (!textMessage) return console.log('You must type something !');
 
       const response = await postrequest(
