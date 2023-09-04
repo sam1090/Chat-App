@@ -1,4 +1,4 @@
-export const baseUrl = 'http://localhost:5000/api';
+export const baseUrl = 'https://chat-app-api-usan.onrender.com/';
 
 export const postrequest = async (url, body) => {
   const response = await fetch(url, {

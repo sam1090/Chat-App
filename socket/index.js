@@ -1,6 +1,6 @@
 const { Server } = require('socket.io');
 
-const io = new Server({ cors: 'http://localhost:5173/' });
+const io = new Server({ cors: ['http://localhost:5173/' , 'https://chat-app-lf1i.onrender.com/' ,'https://chat-app-api-usan.onrender.com/', 'https://chat-app-socket-51b9.onrender.com'] });
 
 let onlineUsers = [];
 
